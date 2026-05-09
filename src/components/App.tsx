@@ -60,6 +60,19 @@ const App = observer(() => {
     }
   }
 
+  // 插入图片到幻灯片
+  const handleImageInsert = (imageHtml: string) => {
+    if (!editMode) {
+      setEditMode(true)
+    }
+    const currentSlide = pptStore.currentSlide
+    if (currentSlide) {
+      // 在内容底部添加图片
+      const newContent = currentSlide.content + '\n' + imageHtml
+      pptStore.updateSlideContent(pptStore.activeIndex, newContent)
+    }
+  }
+
   const currentSlide = pptStore.currentSlide
 
   return (
@@ -192,7 +205,7 @@ const App = observer(() => {
                 </div>
               ) : (
                 // 预览模式
-                <SlideView slide={currentSlide} />
+                <SlideView slide={currentSlide} onImageInsert={handleImageInsert} />
               )}
             </div>
           </div>
@@ -208,7 +221,10 @@ const App = observer(() => {
             Mode: <span className="font-semibold">{editMode ? 'Edit' : 'Preview'}</span>
           </div>
           <div>
-            Last updated: <span className="font-semibold">{new Date(currentSlide?.updated_at || Date.now()).toLocaleTimeString()}</span>
+            Last updated:{' '}
+            <span className="font-semibold">
+              {new Date(currentSlide?.updated_at || Date.now()).toLocaleTimeString()}
+            </span>
           </div>
         </div>
       </div>
